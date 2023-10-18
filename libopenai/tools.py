@@ -31,6 +31,15 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
     :param max_tokens:
     :param top_p:
     :return:  data_json, response
+
+    example of JSON result:
+
+    {
+      "words_list": ["tekmovanja"],
+      "number_of_sentences": 2,
+      "slovenian_text": "Naša šola je organizirala veliko športnih tekmovanj. Tudi letos bomo imeli tekmovanje v teku, kjer se lahko vsi učenci pomerijo.",
+      "italian_translation": "La nostra scuola ha organizzato molte competizioni sportive. Anche quest'anno avremo una gara di corsa, in cui tutti gli studenti possono competere."
+    }
     """
 
     if not OPENAI_API_KEY:
