@@ -24,10 +24,14 @@ import openai
 openai.api_key = OPENAI_API_KEY
 
 
-system_content = ("the input is a list of slovenian words (one or more words, up to 5), where each word is included in apexes. "
+system_content = ("the input is a list of slovenian words (one or more words; N is the number of slovenian words), where each word is included in apexes. "
                   "You have to generate a random text (composed by one or more sentences) which must include, at least once, all the input words passed as role 'user'."
                   " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
-                  "and the italian translation of the same text. ")
+                  "and the correct italian translation of the same text. "
+                  "Also, in the JSON output, you must include the number of sentences generated in the slovenian text (parameter name: number_of_sentences)."
+                  "Also, in the JSON output, you must include other N-1 italian texts (grouped in a list called 'wrong_ita_answers')"
+                  " which are random i.e not even correlated to the 'correct' translation of the generated slovene text."
+                  )
 
 
 response = openai.ChatCompletion.create(
