@@ -1,4 +1,4 @@
-
+import json
 import os
 import environ
 from pathlib import Path
@@ -24,9 +24,10 @@ import openai
 openai.api_key = OPENAI_API_KEY
 
 
-system_content = "slovenian language: generate a random sentence including the words passed as role 'user."\
-                  " the output must be valid JSON and must include the original words, the generated example in slovenian,"\
-                  "and the italian translation of the generated example. "
+system_content = ("the input is a list of slovenian words (one or more words, up to 5), where each word is included in apexes. "
+                  "You have to generate a random text (composed by one or more sentences) which must include, at least once, all the input words passed as role 'user'."
+                  " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
+                  "and the italian translation of the same text. ")
 
 
 response = openai.ChatCompletion.create(
@@ -34,11 +35,11 @@ response = openai.ChatCompletion.create(
   messages=[
     {
       "role": "system",
-      "content": system_content #"You will be provided with a product description and seed words, and your task is to generate product names."
+      "content": system_content
     },
     {
       "role": "user",
-      "content": "('tekmovanja')"
+      "content": "'tekmovanja'"
     }
   ],
   temperature=0.8,
@@ -49,3 +50,16 @@ response = openai.ChatCompletion.create(
 )
 
 print(response)
+
+
+data_str = response.choices[0].message.content
+
+print(data_str)
+
+print()
+print("***")
+
+data_json = json.loads(data_str)
+#
+# # Now, data_json is a dictionary.
+print(data_json['slovenian_text'])
