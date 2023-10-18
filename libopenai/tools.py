@@ -23,16 +23,22 @@ import openai
 
 openai.api_key = OPENAI_API_KEY
 
+
+system_content = "slovenian language: generate a random sentence including the words passed as role 'user."\
+                  " the output must be valid JSON and must include the original words, the generated example in slovenian,"\
+                  "and the italian translation of the generated example. "
+
+
 response = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
   messages=[
     {
       "role": "system",
-      "content": "You will be provided with a product description and seed words, and your task is to generate product names."
+      "content": system_content #"You will be provided with a product description and seed words, and your task is to generate product names."
     },
     {
       "role": "user",
-      "content": "Product description: A home milkshake maker\nSeed words: fast, healthy, compact."
+      "content": "('tekmovanja')"
     }
   ],
   temperature=0.8,
