@@ -140,8 +140,14 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# we need to sort text using the slovenian locale
-locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
+try:
+    # we need to sort text using the slovenian locale
+    locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
+except locale.Error:
+    print('WARNING: Slovenian locale not found. Sorting text will not work correctly.')
+    print('To fix this, install the locale sl_SI.UTF-8 on your system using:')
+    print(' sudo dpkg-reconfigure locales')
+    exit(1)
 
 # install additional locale on debian using:
 # sudo dpkg-reconfigure locales
