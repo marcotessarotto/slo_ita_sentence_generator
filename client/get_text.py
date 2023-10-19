@@ -29,10 +29,10 @@ test_data = {
     'word_list': ['tek', "šola"] # "šola", "tek"
 }
 
-test_data = {
-
-    'word_list': ["kruh", "mleko", "sir"]
-}
+# test_data = {
+#
+#     'word_list': ["kruh", "mleko", "sir"]
+# }
 
 # Authenticate first
 login_url = f"{BASE_URL}/admin/login/"  # Assuming default Django admin login URL. Adjust if different.
@@ -43,7 +43,8 @@ with requests.Session() as session:
 
     # Now login using the CSRF token
     headers = {
-        'X-CSRFToken': csrf_token
+        'X-CSRFToken': csrf_token,
+        'Referer': env('WEB_SERVICE_REFERER')
     }
     login_response = session.post(login_url, data=login_data, headers=headers)
 
