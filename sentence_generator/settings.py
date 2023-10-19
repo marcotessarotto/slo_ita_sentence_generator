@@ -89,9 +89,8 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
-        'PROTOCOL': 'tcp',
+        'HOST': env('DB_HOST', default='127.0.0.1'),  # default to localhost if DB_HOST is not set
+        'PORT': env('DB_PORT', default='3306'),  # default to 3306 if DB_PORT is not set
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4',
                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
