@@ -90,9 +90,11 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
     #     word_instances.append(word)
 
     # Create WordListWithSampleTextAndTranslation instance linked to the Word instances
-    text_translation = WordListWithSampleTextAndTranslation.objects.create(
+    instance = WordListWithSampleTextAndTranslation.objects.create(
         # number_of_sentences=json_data["number_of_sentences"],
         slovenian_text=json_data["slovenian_text"],
         italian_text=json_data["italian_text"]
     )
-    text_translation.words.set(words_instances)
+    instance.words.set(words_instances)
+
+    return instance
