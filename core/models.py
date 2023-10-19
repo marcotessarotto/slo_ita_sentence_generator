@@ -20,7 +20,7 @@ class Word(models.Model):
         return f"{self.text} ({self.get_language_display()})"
 
 
-class TextTranslation(models.Model):
+class WordListWithSampleTextAndTranslation(models.Model):
     words = models.ManyToManyField(Word, related_name='text_translations')
 
     sha256_hash_of_words = models.CharField(max_length=64, unique=False)
@@ -56,8 +56,8 @@ def parse_json_and_create_instances(json_data):
         word, _ = Word.objects.get_or_create(text=word_text, language='slovensko')
         word_instances.append(word)
 
-    # Create TextTranslation instance linked to the Word instances
-    text_translation = TextTranslation.objects.create(
+    # Create WordListWithSampleTextAndTranslation instance linked to the Word instances
+    text_translation = WordListWithSampleTextAndTranslation.objects.create(
         number_of_sentences=data["number_of_sentences"],
         slovenian_text=data["slovenian_text"],
         italian_text=data["italian_text"]
