@@ -26,7 +26,7 @@ login_data = {
 }
 
 test_data = {
-    'word_list': ['tek', "šola"] # "šola", "tek"
+    'word_list': ['tek', "šola", "glasba"] # "šola", "tek"
 }
 
 # test_data = {
