@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
@@ -26,3 +26,9 @@ def produce_examples(request):
 
     return JsonResponse(response_data)
 
+
+def homepage(request):
+
+    # return an empty html page
+
+    return HttpResponse("<html><body><h1>Homepage</h1></body></html>")

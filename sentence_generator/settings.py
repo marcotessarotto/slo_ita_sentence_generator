@@ -145,3 +145,4 @@ locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
 
 # install additional locale on debian using:
 # sudo dpkg-reconfigure locales
+LOGIN_REDIRECT_URL = '/core/'
