@@ -9,11 +9,7 @@ def get_openai_api_key():
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
-    # Set up django-environ
-    env = environ.Env(
-        # Default values for variables if not set
-        DEBUG=(bool, False)
-    )
+    env = environ.Env()
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
     return env('OPENAI_API_KEY')
