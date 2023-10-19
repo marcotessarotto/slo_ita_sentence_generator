@@ -1,12 +1,27 @@
 import requests
+import os
+import environ
+from pathlib import Path
+
+def get_env():
+    BASE_DIR = Path(__file__).resolve().parent.parent
+
+    env = environ.Env()
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+    return env
+
+# return env('OPENAI_API_KEY')
+
+env = get_env()
 
 # Set the base URL of your Django server
-BASE_URL = 'http://localhost:8000'  # Adjust this to the actual URL and port where your Django server runs
+BASE_URL = env('BASE_URL') #'http://localhost:8000'  # Adjust this to the actual URL and port where your Django server runs
 
 # Define your login credentials and test data
 login_data = {
-    'username': 'marco',
-    'password': 'marco'
+    'username': env('WEB_SERVICE_USERNAME'),
+    'password': env('WEB_SERVICE_PASSWORD')
 }
 
 test_data = {
