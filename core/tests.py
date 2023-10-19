@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from core.models import Word, WordListWithSampleTextAndTranslation
 from core.models import parse_json_and_create_instances  # Assuming the function is in a utils.py file in 'myapp'
@@ -54,67 +55,123 @@ class ParseJsonAndCreateInstancesTestCase(TestCase):
 
     # Add more test cases as needed...
 
-# Create your tests here.
 
-# from django.test import TestCase
-# from django.urls import reverse
+# class WebserviceTestCase(TestCase):
+#
+#     def setUp(self):
+#         # Create a test user
+#         self.user = User.objects.create_user(
+#             username='your_username',
+#             password='your_password',
+#             email='testuser@example.com'
+#         )
+#
+#     def test_auth(self):
+#
+#         import requests
+#
+#         # Set the base URL of your Django server
+#         BASE_URL = 'http://localhost:8000'  # Change this if your server runs on a different URL/port
+#
+#         # Define test data
+#         login_data = {
+#             'username': 'your_username',
+#             'password': 'your_password'
+#         }
+#
+#         test_data = {
+#             'word_list': ['parola1', 'parola2', 'parola3'],
+#             'slo2ita': 'True',
+#             'number_of_sentences': 5
+#         }
+#
+#         # Authenticate first
+#         with requests.Session() as session:
+#             # Fetch the login page first to get the CSRF token
+#             response = session.get(f"{BASE_URL}/admin/login/")
+#
+#             print(response.text)
+#             print()
+#
+#             # Django stores the CSRF token in a cookie and in a hidden input field named 'csrfmiddlewaretoken'
+#             # We can retrieve the token from the cookie or from the form
+#             csrf_token = session.cookies['csrftoken']
+#
+#             # Include the CSRF token in login data
+#             login_data['csrfmiddlewaretoken'] = csrf_token
+#
+#             login_response = session.post(f"{BASE_URL}/admin/login/", data=login_data)
+#
+#             if login_response.status_code == 200:
+#                 # For the next request (after login), we can fetch the CSRF token again from the cookies
+#                 # But this is optional because our session already has the cookie set
+#                 csrf_token = session.cookies['csrftoken']
+#
+#                 headers = {
+#                     'X-CSRFToken': csrf_token
+#                 }
+#
+#                 # Use the session of the logged-in user to make the request
+#                 response = session.post(f"{BASE_URL}/core/produce_examples/", data=test_data, headers=headers)
+#
+#                 if response.status_code == 200:
+#                     print("Service response:", response.json())
+#                 else:
+#                     print("Error:", response.status_code, response.text)
+#             else:
+#                 print("Failed to login:", login_response.status_code, login_response.text)
 
-# from .models import Question
 
-# class QuestionModelTests(TestCase):
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth.models import User
 
-#     def test_was_published_recently_with_future_question(self):
-#         """
-#         was_published_recently() returns False for questions whose pub_date
-#         is in the future.
-#         """
-#         time = timezone.now() + datetime.timedelta(days=30)
-#         future_question = Question(pub_date=time)
-#         self.assertIs(future_question.was_published_recently(), False)
 
-#     def test_was_published_recently_with_old_question(self):
-#         """
-#         was_published_recently() returns False for questions whose pub_date
-#         is older than 1 day.
-#         """
-#         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
-#         old_question = Question(pub_date=time)
-#         self.assertIs(old_question.was_published_recently(), False)
+class ProduceExamplesTest(TestCase):
 
-#     def test_was_published_recently_with_recent_question(self):
-#         """
-#         was_published_recently() returns True for questions whose pub_date
-#         is within the last day.
-#         """
-#         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
-#         recent_question = Question(pub_date=time)
-#         self.assertIs(recent_question.was_published_recently(), True)
+    def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword',
+            email='testuser@example.com'
+        )
 
-# def create_question(question_text, days):
-#     """
-#     Create a question with the given `question_text` and published the
-#     given number of `days` offset to now (negative for questions published
-#     in the past, positive for questions that have yet to be published).
-#     """
-#     time = timezone.now() + datetime.timedelta(days=days)
-#     return Question.objects.create(question_text=question_text, pub_date=time)
+    def test_produce_examples_requires_login(self):
+        # Test if the view is protected by @login_required
+        response = self.client.post(reverse('produce_examples'))  # You might need to adjust the reverse name
+        self.assertEqual(response.status_code, 302)  # Should redirect to login
 
-# class QuestionIndexViewTests(TestCase):
-#     def test_no_questions(self):
-#         """
-#         If no questions exist, an appropriate message is displayed.
-#         """
-#         response = self.client.get(reverse('core:index'))
-#         self.assertEqual(response.status_code, 200)
-#         self.assertContains(response, "No polls are available.")
-#         self.assertQuerysetEqual(response.context['latest_question_list'], [])
+    def test_produce_examples_valid_request(self):
+        # Log in
+        self.client.login(username='testuser', password='testpassword')
 
-#     def test_past_question(self):
-#         """
-#         Questions with a pub_date in the past are displayed on the
-#         index page.
-#         """
-#         create_question(question_text="Past question.", days=-30)
-#         response = self.client.get(reverse('core:index'))
-#         self.assertQuerysetEqual(
-#             response.context['latest_question_list'],
+        data = {
+            'word_list': ['example1', 'example2'],
+            'slo2ita': 'True',
+            'number_of_sentences': 5
+        }
+        response = self.client.post(reverse('produce_examples'), data=data)
+
+        self.assertEqual(response.status_code, 200)
+        json_data = response.json()
+        self.assertListEqual(json_data['word_list'], data['word_list'])
+        self.assertEqual(json_data['slo2ita'], True)
+        self.assertEqual(json_data['number_of_sentences'], data['number_of_sentences'])
+
+    def test_produce_examples_invalid_request(self):
+        # Log in
+        self.client.login(username='testuser', password='testpassword')
+
+        data = {
+            'word_list': [],
+            'slo2ita': 'True',
+            'number_of_sentences': 11
+        }
+        response = self.client.post(reverse('produce_examples'), data=data)
+
+        self.assertEqual(response.status_code, 400)  # Bad request
+
+    # Add more test methods as needed
+
+
