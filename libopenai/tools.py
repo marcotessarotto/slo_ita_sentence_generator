@@ -30,7 +30,7 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
     :param temperature:
     :param max_tokens:
     :param top_p:
-    :return:  data_json, response
+    :return:  data_json, data_str, response
 
     example of JSON result:
 
@@ -53,6 +53,13 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
         " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
         "and the correct italian translation of the same text. "
         "Also, in the JSON output, you must include the number of sentences generated in the slovenian text (parameter name: number_of_sentences)."
+        )
+
+    system_content = (
+        "the input is a list of slovenian words, where each word is included in apexes. "
+        "You have to generate a random text which must include all the input words passed as role 'user'. Try to minimize the number of sentences generated."
+        " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
+        "and the correct italian translation of the same text. "
         )
 
     # system_content = ("the input is a list of slovenian words (one or more words; N is the number of slovenian words), where each word is included in apexes. "
@@ -87,13 +94,32 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
 
     # print(response)
 
-    data_str = response.choices[0].message.content
+    try:
+        data_str = response.choices[0].message.content
+    except Exception:
+        data_str = "error"
 
-    # print(data_str)
+    try:
+        data_json = json.loads(data_str)
+    except Exception:
+        data_json = { "error": "True" }
 
-    data_json = json.loads(data_str)
-    #
-    # # Now, data_json is a dictionary.
-    # print(data_json['slovenian_text'])
+    return data_json, data_str, response
 
-    return data_json, response
+
+
+if __name__ == '__main__':
+    # word_list = ["tekmovanja", "šola", "tek", "učenci", "pomerijo"]
+    # word_list = ["tekmovanja", "šola", "tek", "učenci", "pomerijo", "tekmovalci",
+    #                 "tekmovanje", "šport", "športni", "športna", "športno", "športne",
+    #                 "športnik", "športniki", "športnica", "športnice", "športnico", "športnic",
+    #                 "športnikov", "športnikom", "športnikih", "športniku", "športniki",
+    #                 "športnikov", "športnikom", "športnikih", "športniku", "športniki",
+    #              ]
+
+    word_list = ["tekmovanja", "šola", ]
+
+    data_json, data_str, response = generate_example_text_slo_ita(word_list)
+
+    print(data_json)
+

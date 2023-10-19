@@ -1,3 +1,5 @@
+import hashlib
+
 from django.db import models
 import json
 
@@ -20,15 +22,31 @@ class Word(models.Model):
 
 class TextTranslation(models.Model):
     words = models.ManyToManyField(Word, related_name='text_translations')
+
+    sha256_hash_of_words = models.CharField(max_length=64, unique=False)
+
     number_of_sentences = models.IntegerField()
     slovenian_text = models.TextField()
     italian_text = models.TextField()
 
+    sha256_hash_of_slovenian_text = models.CharField(max_length=64, unique=False)
+    sha256_hash_of_italian_text = models.CharField(max_length=64, unique=False)
+
     def __str__(self):
         return ", ".join(word.text for word in self.words.all())
 
+    def save(self, *args, **kwargs):
 
-def parse_json_and_create_istances(json_data):
+        # Calculate the sha256 hash of the words
+        words_list = sorted([word.text for word in self.words.all()])
+        self.sha256_hash_of_words = hashlib.sha256(json.dumps(words_list).encode()).hexdigest()
+
+        self.sha256_hash_of_slovenian_text = hashlib.sha256(self.slovenian_text.encode()).hexdigest()
+        self.sha256_hash_of_italian_text = hashlib.sha256(self.italian_text.encode()).hexdigest()
+        super().save(*args, **kwargs)
+
+
+def parse_json_and_create_instances(json_data):
     data = json.loads(json_data)
 
     # Create or retrieve Word instances for each word in the words_list
