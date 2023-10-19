@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import locale
 import os
 import environ
 from pathlib import Path
@@ -139,3 +139,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# we need to sort text using the slovenian locale
+locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
+
+# install additional locale on debian using:
+# sudo dpkg-reconfigure locales

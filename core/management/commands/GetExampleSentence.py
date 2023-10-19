@@ -19,6 +19,8 @@ class Command(BaseCommand):
         for word in words:
             self.stdout.write(word)
 
+
+
         data_json, data_str, response = generate_example_text_slo_ita(list(words))
 
         self.stdout.write(self.style.SUCCESS('Received the following data_json:'))

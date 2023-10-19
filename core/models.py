@@ -1,4 +1,5 @@
 import hashlib
+import locale
 
 from django.db import models
 import json
@@ -63,8 +64,11 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
     if not language:
         raise ValueError("Language must be specified")
 
+    # locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
+    # see in settings.py
+
     # check existence of all words in database and create them if they don't exist
-    words_list = sorted(json_data["words_list"])
+    words_list = sorted(json_data["words_list"], key=locale.strxfrm)
 
     words_instances = []
     for word in words_list:
