@@ -11,12 +11,13 @@ def get_env():
 
     return env
 
-# return env('OPENAI_API_KEY')
+
+
 
 env = get_env()
 
 # Set the base URL of your Django server
-BASE_URL = env('BASE_URL') #'http://localhost:8000'  # Adjust this to the actual URL and port where your Django server runs
+BASE_URL = env('BASE_URL')  # Adjust this to the actual URL and port where your Django server runs
 
 # Define your login credentials and test data
 login_data = {
@@ -25,7 +26,7 @@ login_data = {
 }
 
 test_data = {
-    'word_list': ['tek' , "šola" ] # "šola", "tek"
+    'word_list': ['tek', "šola"] # "šola", "tek"
 }
 
 # Authenticate first
