@@ -91,6 +91,7 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
+        'PROTOCOL': 'tcp',
         'AUTOCOMMIT': True,
         'OPTIONS': {'charset': 'utf8mb4',
                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
@@ -145,4 +146,5 @@ locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
 
 # install additional locale on debian using:
 # sudo dpkg-reconfigure locales
+
 LOGIN_REDIRECT_URL = '/core/'
