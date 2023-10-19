@@ -43,13 +43,13 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
 
     openai.api_key = OPENAI_API_KEY
 
-    system_content = (
-        "the input is a list of slovenian words (one or more words; N is the number of slovenian words), where each word is included in apexes. "
-        "You have to generate a random text (composed by one or more sentences) which must include, at least once, all the input words passed as role 'user'."
-        " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
-        "and the correct italian translation of the same text. "
-        "Also, in the JSON output, you must include the number of sentences generated in the slovenian text (parameter name: number_of_sentences)."
-        )
+    # system_content = (
+    #     "the input is a list of slovenian words (one or more words; N is the number of slovenian words), where each word is included in apexes. "
+    #     "You have to generate a random text (composed by one or more sentences) which must include, at least once, all the input words passed as role 'user'."
+    #     " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
+    #     "and the correct italian translation of the same text. "
+    #     "Also, in the JSON output, you must include the number of sentences generated in the slovenian text (parameter name: number_of_sentences)."
+    #     )
 
     system_content = (
         "the input is a list of slovenian words, where each word is included in apexes. "
