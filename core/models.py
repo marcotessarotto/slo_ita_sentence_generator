@@ -57,6 +57,18 @@ class WordListWithSampleTextAndTranslation(models.Model):
 
         self.save()
 
+    # convert instance to JSON
+    def to_json(self):
+
+        return {
+            "id": self.id,
+            # "number_of_sentences": self.number_of_sentences,
+            "slovenian_text": self.slovenian_text,
+            "italian_text": self.italian_text,
+            "words_list": [word.text for word in self.words.all()]
+        }
+
+
 
 def create_words_in_database(words_list, language):
     """
@@ -88,7 +100,7 @@ def create_words_in_database(words_list, language):
     return words_instances
 
 
-def get_number_of_examples(words_list, language):
+def get_number_of_examples(words_list, language, return_list=False):
     if not language:
         raise ValueError("Language must be specified")
 
@@ -102,7 +114,7 @@ def get_number_of_examples(words_list, language):
         sha256_hash_of_words=sha256_hash_of_words
     )
 
-    return rs.count()
+    return rs.count() if not return_list else rs.order_by("-id")
 
 
 def parse_json_and_create_instances(json_data, language, check_presence=True):
