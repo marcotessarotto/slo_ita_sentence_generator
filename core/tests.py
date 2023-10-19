@@ -27,6 +27,19 @@ class ParseJsonAndCreateInstancesTestCase(TestCase):
         self.assertTrue(Word.objects.filter(text="šola", language="slovensko").exists())
         self.assertTrue(Word.objects.filter(text="tek", language="slovensko").exists())
 
+    def test_parse_json_and_create_instance_duplicate_word(self):
+        json_data = {
+          "words_list": ["šola", "tek"],
+          "slovenian_text": "Danes sem šel v šolo in se udeležil teka.",
+          "italian_text": "Oggi sono andato a scuola e ho partecipato alla corsa."
+        }
+
+        instance1 = parse_json_and_create_instances(json_data, language="slovensko")
+
+        instance2 = parse_json_and_create_instances(json_data, language="slovensko")
+
+        self.assertEqual(instance1.id, instance2.id)
+
     # def test_parse_json_and_create_instance_duplicate_word(self):
     #     Word.objects.create(text="example", language="slovensko")
     #     json_data = {

@@ -69,6 +69,7 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
     words_instances = []
     for word in words_list:
         rs = Word.objects.filter(text=word, language=language)
+
         if not rs.exists():
             # create new Word instance
             w = Word.objects.create(text=word, language=language)
@@ -83,16 +84,10 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
         words_list = [f"{word.text}|{word.language}" for word in words_instances]
         sha256_hash_of_words = hashlib.sha256(json.dumps(words_list).encode()).hexdigest()
 
-        rs = WordListWithSampleTextAndTranslation.objects.filter(sha256_hash_of_words=sha256_hash_of_words)
-        if rs.exists():
-            return rs.first()
-
-    # Create or retrieve Word instances for each word in the words_list
-    # word_instances = []
-    # for word_text in json_data["words_list"]:
-    #     # Assuming all words in this example are in Slovenian. Adjust if needed.
-    #     word, _ = Word.objects.get_or_create(text=word_text, language='slovensko')
-    #     word_instances.append(word)
+        if rs := WordListWithSampleTextAndTranslation.objects.filter(
+            sha256_hash_of_words=sha256_hash_of_words
+        ).first():
+            return rs
 
     # Create WordListWithSampleTextAndTranslation instance linked to the Word instances
     instance = WordListWithSampleTextAndTranslation.objects.create(
