@@ -44,11 +44,6 @@ class WordListWithSampleTextAndTranslation(models.Model):
         words_list = [f"{word.text}|{word.language}" for word in sorted_word_list]
         return hashlib.sha256(json.dumps(words_list).encode()).hexdigest()
 
-    # def save(self, *args, **kwargs):
-    #
-    #
-    #     super().save(*args, **kwargs)
-
     def calculate_hashes(self):
         self.sha256_hash_of_words = self.get_hash_of_words()
 
@@ -67,7 +62,6 @@ class WordListWithSampleTextAndTranslation(models.Model):
             "italian_text": self.italian_text,
             "words_list": [word.text for word in self.words.all()]
         }
-
 
 
 def create_words_in_database(words_list, language):
