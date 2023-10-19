@@ -1,6 +1,6 @@
-openai
-Django
-requests
+openai~=0.28.1
+Django~=4.2.6
+requests~=2.31.0
 django-model-utils
 mysqlclient
 gunicorn
