@@ -1,3 +1,5 @@
+import json
+
 import requests
 import os
 import environ
@@ -10,8 +12,6 @@ def get_env():
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
     return env
-
-
 
 
 env = get_env()
@@ -27,6 +27,11 @@ login_data = {
 
 test_data = {
     'word_list': ['tek', "šola"] # "šola", "tek"
+}
+
+test_data = {
+
+    'word_list': ["kruh", "mleko", "sir"]
 }
 
 # Authenticate first
@@ -53,6 +58,10 @@ with requests.Session() as session:
 
         if response.status_code == 200:
             print("Service response:", response.json())
+
+            print()
+            s = json.dumps(response.json(), indent=4, sort_keys=True)
+            print(s)
         else:
             print("Error:", response.status_code, response.text)
     else:
