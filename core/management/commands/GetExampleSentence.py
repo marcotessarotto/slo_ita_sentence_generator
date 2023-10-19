@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from core.models import parse_json_and_create_instances
+from core.models import parse_json_and_create_instances, get_number_of_examples
 from libopenai.tools import generate_example_text_slo_ita
 
 
@@ -19,7 +19,9 @@ class Command(BaseCommand):
         for word in words:
             self.stdout.write(word)
 
-
+        if get_number_of_examples(words, language='slovenian') > 1:
+            self.stdout.write(self.style.ERROR('There are already examples for the provided words'))
+            return
 
         data_json, data_str, response = generate_example_text_slo_ita(list(words))
 

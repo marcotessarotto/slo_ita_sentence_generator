@@ -58,17 +58,19 @@ class WordListWithSampleTextAndTranslation(models.Model):
         self.save()
 
 
-def parse_json_and_create_instances(json_data, language, check_presence=True):
-    # data = json.loads(json_data)
-
+def create_words_in_database(words_list, language):
+    """
+    Create Word instances in the database, if not already present.
+    :param words_list:
+    :param language:
+    :return: list of Word instances
+    """
     if not language:
         raise ValueError("Language must be specified")
 
     # locale.setlocale(locale.LC_ALL, 'sl_SI.UTF-8')  # Set the locale to Slovenian
     # see in settings.py
-
-    # check existence of all words in database and create them if they don't exist
-    words_list = sorted(json_data["words_list"], key=locale.strxfrm)
+    words_list = sorted(words_list, key=locale.strxfrm)
 
     words_instances = []
     for word in words_list:
@@ -82,6 +84,35 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
             w = rs.first()
 
         words_instances.append(w)
+
+    return words_instances
+
+
+def get_number_of_examples(words_list, language):
+    if not language:
+        raise ValueError("Language must be specified")
+
+    # check existence of all words in database and create them if they don't exist
+    words_instances = create_words_in_database(words_list, language)
+
+    words_list = [f"{word.text}|{word.language}" for word in words_instances]
+    sha256_hash_of_words = hashlib.sha256(json.dumps(words_list).encode()).hexdigest()
+
+    rs = WordListWithSampleTextAndTranslation.objects.filter(
+        sha256_hash_of_words=sha256_hash_of_words
+    )
+
+    return rs.count()
+
+
+def parse_json_and_create_instances(json_data, language, check_presence=True):
+    # data = json.loads(json_data)
+
+    if not language:
+        raise ValueError("Language must be specified")
+
+    # check existence of all words in database and create them if they don't exist
+    words_instances = create_words_in_database(json_data["words_list"], language)
 
     if check_presence:
         # check if the same list of words is already present in the database
