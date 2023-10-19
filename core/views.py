@@ -1,9 +1,11 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
+@csrf_exempt
 @require_POST
 def produce_examples(request):
     word_list = request.POST.getlist('word_list')
@@ -13,7 +15,6 @@ def produce_examples(request):
     # Validate parameters
     if not word_list or not (0 < number_of_sentences <= 10):
         return HttpResponseBadRequest("Invalid parameters")
-
 
     # Your logic to generate examples goes here.
     # For the sake of this example, I'll just return the same input.
@@ -28,7 +29,6 @@ def produce_examples(request):
 
 
 def homepage(request):
-
     # return an empty html page
 
     return HttpResponse("<html><body><h1>Homepage</h1></body></html>")
