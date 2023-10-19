@@ -27,6 +27,6 @@ class Command(BaseCommand):
         instance = parse_json_and_create_instances(data_json, language='slovenian', check_presence=True)
 
         self.stdout.write(self.style.SUCCESS('Created the following instance:'))
-        self.stdout.write(instance)
+        self.stdout.write(str(instance.id))
 
 

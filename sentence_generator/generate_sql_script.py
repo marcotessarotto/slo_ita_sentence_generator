@@ -23,9 +23,12 @@ CREATE USER { env('DB_USER') }@localhost IDENTIFIED BY '{env('DB_PASSWORD')}';
 GRANT ALL PRIVILEGES ON {env('DB_NAME')}.* TO {env('DB_USER')}@localhost;
 
 FLUSH PRIVILEGES;
+
+
+CREATE DATABASE test_{ env('DB_NAME') } CHARACTER SET UTF8;
+GRANT ALL PRIVILEGES ON test_{ env('DB_NAME') }.* TO { env('DB_USER') }@localhost;
+FLUSH PRIVILEGES;
 """
 
 
 print(s)
-
-# print(env('SECRET_KEY'))

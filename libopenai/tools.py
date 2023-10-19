@@ -58,8 +58,8 @@ def generate_example_text_slo_ita(word_list, OPENAI_API_KEY=None, temperature=0.
     system_content = (
         "the input is a list of slovenian words, where each word is included in apexes. "
         "You have to generate a random text which must include all the input words passed as role 'user'. Try to minimize the number of sentences generated."
-        " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language,"
-        "and the correct italian translation of the same text. "
+        " The output must be valid JSON and must include: the original input words (parameter name: words_list), the generated text in slovenian language (parameter name: slovenian_text,"
+        "and the correct italian translation of the same text (parameter name: 'italian_text'). "
         )
 
     # system_content = ("the input is a list of slovenian words (one or more words; N is the number of slovenian words), where each word is included in apexes. "

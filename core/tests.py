@@ -1,4 +1,45 @@
 from django.test import TestCase
+from core.models import Word, WordListWithSampleTextAndTranslation
+from core.models import parse_json_and_create_instances  # Assuming the function is in a utils.py file in 'myapp'
+
+
+class ParseJsonAndCreateInstancesTestCase(TestCase):
+
+    def test_parse_json_and_create_instance_no_language(self):
+        json_data = {
+          "words_list": ["šola", "tek"],
+          "slovenian_text": "Danes sem šel v šolo in se udeležil teka.",
+          "italian_text": "Oggi sono andato a scuola e ho partecipato alla corsa."
+        }
+
+        with self.assertRaises(ValueError):
+            parse_json_and_create_instances(json_data, language=None)
+
+    def test_parse_json_and_create_instance_success(self):
+        json_data = {
+          "words_list": ["šola", "tek"],
+          "slovenian_text": "Danes sem šel v šolo in se udeležil teka.",
+          "italian_text": "Oggi sono andato a scuola e ho partecipato alla corsa."
+        }
+        instance = parse_json_and_create_instances(json_data, language="slovensko")
+        self.assertEqual(instance.slovenian_text, "Danes sem šel v šolo in se udeležil teka.")
+        self.assertEqual(instance.italian_text, "Oggi sono andato a scuola e ho partecipato alla corsa.")
+        self.assertTrue(Word.objects.filter(text="šola", language="slovensko").exists())
+        self.assertTrue(Word.objects.filter(text="tek", language="slovensko").exists())
+
+    # def test_parse_json_and_create_instance_duplicate_word(self):
+    #     Word.objects.create(text="example", language="slovensko")
+    #     json_data = {
+    #       "words_list": ["šola", "tek"],
+    #       "slovenian_text": "Danes sem šel v šolo in se udeležil teka.",
+    #       "italian_text": "Oggi sono andato a scuola e ho partecipato alla corsa."
+    #     }
+    #     instance = parse_json_and_create_instances(json_data, language="slovensko")
+    #     self.assertEqual(instance.slovenian_text, "This is a test.")
+    #     self.assertEqual(instance.italian_text, "Questo è un test.")
+    #     self.assertEqual(Word.objects.filter(text="example", language="slovensko").count(), 1)
+
+    # Add more test cases as needed...
 
 # Create your tests here.
 

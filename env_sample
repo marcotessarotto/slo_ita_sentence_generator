@@ -1,0 +1,10 @@
+DB_NAME=sloita_sentence_generator_db
+DB_USER=sloita_sentence_generator_user
+DB_PASSWORD='......................'
+DB_HOST=localhost
+DB_PORT=5432
+SECRET_KEY='.................'
+DEBUG=True
+ALLOWED_HOSTS=*
+OPENAI_API_KEY='........'
+

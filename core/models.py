@@ -33,7 +33,7 @@ class WordListWithSampleTextAndTranslation(models.Model):
     sha256_hash_of_italian_text = models.CharField(max_length=64, unique=False)
 
     def __str__(self):
-        return f"{self.get_words_list()} ({self.number_of_sentences} sentences)"
+        return f"{self.id} ({self.number_of_sentences} sentences)"
 
     # calculate hash of words
     def get_hash_of_words(self):
@@ -43,13 +43,18 @@ class WordListWithSampleTextAndTranslation(models.Model):
         words_list = [f"{word.text}|{word.language}" for word in sorted_word_list]
         return hashlib.sha256(json.dumps(words_list).encode()).hexdigest()
 
-    def save(self, *args, **kwargs):
+    # def save(self, *args, **kwargs):
+    #
+    #
+    #     super().save(*args, **kwargs)
 
+    def calculate_hashes(self):
         self.sha256_hash_of_words = self.get_hash_of_words()
 
         self.sha256_hash_of_slovenian_text = hashlib.sha256(self.slovenian_text.encode()).hexdigest()
         self.sha256_hash_of_italian_text = hashlib.sha256(self.italian_text.encode()).hexdigest()
-        super().save(*args, **kwargs)
+
+        self.save()
 
 
 def parse_json_and_create_instances(json_data, language, check_presence=True):
@@ -96,5 +101,7 @@ def parse_json_and_create_instances(json_data, language, check_presence=True):
         italian_text=json_data["italian_text"]
     )
     instance.words.set(words_instances)
+
+    instance.calculate_hashes()
 
     return instance
