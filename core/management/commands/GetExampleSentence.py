@@ -21,15 +21,33 @@ class Command(BaseCommand):
             help='Maximum number of examples per word list'
         )
 
+        # add an optional boolean argument
+        parser.add_argument(
+            '--remote',
+            action='store_true',
+            dest='remote',
+            default=False,
+            help='Whether to use the remote API or the local API'
+        )
+
+    def call_remote_api(self, words, max_num_examples_per_word_list):
+
+        pass
+
     def handle(self, *args, **kwargs):
         words = kwargs['words']
 
         max_num_examples_per_word_list = kwargs['max_num_examples_per_word_list']
 
+        remote = kwargs['remote']
+
         # Do something with the words. For this example, we'll just print them.
         self.stdout.write(self.style.SUCCESS('Received the following words:'))
         for word in words:
             self.stdout.write(word)
+
+        if remote:
+            self.call_remote_api(words, max_num_examples_per_word_list)
 
         if (num := get_number_of_examples(words, language='slovenian')) > max_num_examples_per_word_list:
             self.stdout.write(self.style.ERROR(f'There are already {num} examples for the provided words'))
