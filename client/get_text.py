@@ -88,5 +88,14 @@ if __name__ == '__main__':
     
     max_num_examples_per_word_list = 1
 
-    call_remote_api(words, max_num_examples_per_word_list)
+    status_code, json_data, msg = call_remote_api(words, max_num_examples_per_word_list)
+
+    if status_code == 200:
+        print("Service response:", json_data)
+        print()
+        s = json.dumps(json_data, indent=4, sort_keys=True)
+        print(s)
+    else:
+        print("Error:", status_code, msg)
+
 

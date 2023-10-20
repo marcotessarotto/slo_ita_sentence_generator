@@ -1,5 +1,8 @@
+import json
+
 from django.core.management.base import BaseCommand
 
+from client.get_text import call_remote_api
 from core.models import parse_json_and_create_instances, get_number_of_examples
 from libopenai.tools import generate_example_text_slo_ita
 
@@ -30,10 +33,6 @@ class Command(BaseCommand):
             help='Whether to use the remote API or the local API'
         )
 
-    def call_remote_api(self, words, max_num_examples_per_word_list):
-
-        pass
-
     def handle(self, *args, **kwargs):
         words = kwargs['words']
 
@@ -47,7 +46,17 @@ class Command(BaseCommand):
             self.stdout.write(word)
 
         if remote:
-            self.call_remote_api(words, max_num_examples_per_word_list)
+            status_code, json_data, msg = call_remote_api(words, max_num_examples_per_word_list)
+
+            if status_code == 200:
+                print("Service response:", json_data)
+                print()
+                s = json.dumps(json_data, indent=4, sort_keys=True)
+                print(s)
+            else:
+                print("Error:", status_code, msg)
+
+            return
 
         if (num := get_number_of_examples(words, language='slovenian')) > max_num_examples_per_word_list:
             self.stdout.write(self.style.ERROR(f'There are already {num} examples for the provided words'))
